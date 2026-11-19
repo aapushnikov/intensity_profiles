@@ -126,7 +126,7 @@
 <canvas id="canvas-fear" width="1000" height="620"></canvas>
 
 <button onclick="clearCanvas('canvas-fear')">Очистить</button>
-<button onclick="saveCanvas('canvas-fear', 'status-fear')">Сохранить</button>
+<button onclick="saveCanvas('canvas-fear', 'status-fear', 'F')">Сохранить</button>
 
 <p class="status" id="status-fear"></p>
 
@@ -144,7 +144,7 @@
 <canvas id="canvas-anger" width="1000" height="620"></canvas>
 
 <button onclick="clearCanvas('canvas-anger')">Очистить</button>
-<button onclick="saveCanvas('canvas-anger', 'status-anger')">Сохранить</button>
+<button onclick="saveCanvas('canvas-anger', 'status-anger', 'A')">Сохранить</button>
 
 <p class="status" id="status-anger"></p>
 
@@ -162,7 +162,7 @@
 <canvas id="canvas-sadness" width="1000" height="620"></canvas>
 
 <button onclick="clearCanvas('canvas-sadness')">Очистить</button>
-<button onclick="saveCanvas('canvas-sadness', 'status-sadness')">Сохранить</button>
+<button onclick="saveCanvas('canvas-sadness', 'status-sadness', 'S')">Сохранить</button>
 
 <p class="status" id="status-sadness"></p>
 
@@ -247,9 +247,9 @@
             565
         );
 
-        // Подпись вертикальной оси
+        // Подпись вертикальной оси — значительно левее
         ctx.save();
-        ctx.translate(25, (plot.top + plot.bottom) / 2);
+        ctx.translate(-55, (plot.top + plot.bottom) / 2);
         ctx.rotate(-Math.PI / 2);
         ctx.font = "bold 20px Arial";
         ctx.textAlign = "center";
@@ -314,7 +314,7 @@
         document.getElementById(statusId).textContent = "";
     }
 
-    async function saveCanvas(canvasId, statusId) {
+    async function saveCanvas(canvasId, statusId, emotion) {
         const canvas = document.getElementById(canvasId);
         const status = document.getElementById(statusId);
 
@@ -328,6 +328,7 @@
 
             const formData = new FormData();
             formData.append("file", blob, "drawing.png");
+            formData.append("emotion", emotion);
 
             try {
                 const response = await fetch(
@@ -344,7 +345,8 @@
                     throw new Error("Ошибка сохранения");
                 }
 
-                status.textContent = "Сохранено. ID: " + result.id;
+                status.textContent =
+                    "Сохранено. ID: " + result.id + "_" + emotion;
 
             } catch (error) {
                 status.textContent = "Ошибка при сохранении. Попробуйте ещё раз.";

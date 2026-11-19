@@ -1,88 +1,302 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Рисовалка</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>График переживания страха</title>
 
     <style>
-        canvas {
-            border: 1px solid black;
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            line-height: 1.5;
+            color: #222;
+        }
+
+        h1, h2 {
+            line-height: 1.3;
+        }
+
+        .example-placeholder {
+            border: 1px dashed #aaa;
+            background: #f7f7f7;
+            padding: 35px 15px;
+            text-align: center;
+            color: #666;
+            margin: 20px 0 30px;
+        }
+
+        #canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
             touch-action: none;
+            cursor: crosshair;
+            background: white;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 10px 22px;
+            margin: 15px 10px 0 0;
+            cursor: pointer;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>Нарисуйте что-нибудь</h1>
+<h1>Вспомните, когда вы последний раз испытывали СТРАХ</h1>
 
-    <canvas id="canvas" width="400" height="400"></canvas>
+<p>Для исследования не подходят эмоции, которые:</p>
 
-    <br><br>
+<ol>
+    <li>Длились больше 2 часов;</li>
+    <li>Были вызваны неизвестной причиной или возникли без неё (например, если вдруг стало тревожно без причины);</li>
+    <li>Продолжаются сейчас.</li>
+</ol>
 
-    <button onclick="clearCanvas()">Очистить</button>
-    <button onclick="saveCanvas()">Сохранить</button>
+<p>Постарайтесь снова вжиться в ту эмоцию — вспомните:</p>
 
-    <p id="status"></p>
+<ol>
+    <li>Что вызвало эмоцию и почему;</li>
+    <li>Что вы почувствовали в первые минуты;</li>
+    <li>Как менялись ваши переживания и когда закончились.</li>
+</ol>
 
-    <script>
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
-        const status = document.getElementById("status");
+<p>
+    Далее вам необходимо нарисовать, как менялась сила ваших переживаний
+    на графике, где по вертикали отмечена сила эмоций, а по горизонтали —
+    время. Начинайте линию с точки 0 по оси времени.
+</p>
 
-        let drawing = false;
+<h2>Первый пример</h2>
 
-        canvas.addEventListener("pointerdown", (e) => {
-            drawing = true;
+<p>
+    Разберём на примере. Валентин встретил на улице бродячую собаку.
+    Он боится собак и сильно испугался. Собака вскоре убежала и страх
+    Валентина ослаб, хотя ещё 20 минут он был немного напряжён и чувствовал
+    учащённое сердцебиение. Он изобразил такой график:
+</p>
+
+<div class="example-placeholder">
+    Здесь будет первый пример графика
+</div>
+
+<h2>Второй пример</h2>
+
+<p>
+    Другой пример. Валентин встревожился, когда, будучи на работе,
+    вспомнил, что по рассеянности мог не закрыть дверь домой.
+    В течение полутора часов его тревога нарастала, пока он прокручивал
+    в голове мысль о незапертой двери. Потом Валентин совершил душевное
+    усилие и рационально убедил себя, что не мог не закрыть дверь,
+    ведь всегда закрывает её. Это успокоило его. Он изобразил такой график:
+</p>
+
+<div class="example-placeholder">
+    Здесь будет второй пример графика
+</div>
+
+<h2>Теперь нарисуйте свой график</h2>
+
+<p>
+    Тут вы можете нарисовать свой график для ситуации,
+    когда вы в последний раз испытывали СТРАХ.
+</p>
+
+<canvas id="canvas" width="1000" height="620"></canvas>
+
+<button onclick="clearCanvas()">Очистить</button>
+<button onclick="saveCanvas()">Сохранить</button>
+
+<p id="status"></p>
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const status = document.getElementById("status");
+
+    const plot = {
+        left: 270,
+        right: 960,
+        top: 50,
+        bottom: 500
+    };
+
+    let drawing = false;
+
+    function drawAxes() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Белый фон
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = "#cccccc";
+        ctx.lineWidth = 1;
+        ctx.fillStyle = "#222";
+        ctx.font = "18px Arial";
+
+        // Горизонтальные уровни силы эмоции
+        const levels = [
+            "Не испытывал эмоцию",
+            "Испытывал эмоцию слабо",
+            "Испытывал эмоцию умеренно",
+            "Испытывал эмоцию сильно"
+        ];
+
+        const levelCount = 3;
+
+        for (let i = 0; i <= levelCount; i++) {
+            const y = plot.bottom - i * (plot.bottom - plot.top) / levelCount;
+
             ctx.beginPath();
-            ctx.moveTo(e.offsetX, e.offsetY);
-        });
-
-        canvas.addEventListener("pointermove", (e) => {
-            if (!drawing) return;
-
-            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.moveTo(plot.left, y);
+            ctx.lineTo(plot.right, y);
             ctx.stroke();
-        });
 
-        canvas.addEventListener("pointerup", () => {
-            drawing = false;
-        });
-
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            status.textContent = "";
+            ctx.fillStyle = "#222";
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            ctx.fillText(levels[i], plot.left - 15, y);
         }
 
-        async function saveCanvas() {
-            status.textContent = "Сохраняем...";
+        // Вертикальная ось
+        ctx.strokeStyle = "#222";
+        ctx.lineWidth = 2;
 
-            canvas.toBlob(async (blob) => {
-                const formData = new FormData();
-                formData.append("file", blob, "drawing.png");
+        ctx.beginPath();
+        ctx.moveTo(plot.left, plot.top);
+        ctx.lineTo(plot.left, plot.bottom);
+        ctx.lineTo(plot.right, plot.bottom);
+        ctx.stroke();
 
-                try {
-                    const response = await fetch(
-                        "https://intensity-profiles.onrender.com/save",
-                        {
-                            method: "POST",
-                            body: formData
-                        }
-                    );
+        // Отметки времени: каждые 10 минут до 120
+        ctx.font = "15px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
 
-                    const result = await response.json();
+        for (let minute = 0; minute <= 120; minute += 10) {
+            const x = plot.left + (minute / 120) * (plot.right - plot.left);
 
-                    status.textContent =
-                        "Сохранено. ID: " + result.id;
+            ctx.beginPath();
+            ctx.moveTo(x, plot.bottom);
+            ctx.lineTo(x, plot.bottom + 8);
+            ctx.stroke();
 
-                } catch (error) {
-                    status.textContent =
-                        "Ошибка при сохранении.";
-                    console.error(error);
+            ctx.fillStyle = "#222";
+            ctx.fillText(minute, x, plot.bottom + 12);
+        }
+
+        // Подписи осей
+        ctx.font = "18px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("Время (минуты)", (plot.left + plot.right) / 2, 565);
+
+        ctx.save();
+        ctx.translate(35, (plot.top + plot.bottom) / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText("Сила эмоции", 0, 0);
+        ctx.restore();
+    }
+
+    function getPosition(e) {
+        const rect = canvas.getBoundingClientRect();
+
+        let x = (e.clientX - rect.left) * canvas.width / rect.width;
+        let y = (e.clientY - rect.top) * canvas.height / rect.height;
+
+        x = Math.max(plot.left, Math.min(plot.right, x));
+        y = Math.max(plot.top, Math.min(plot.bottom, y));
+
+        return { x, y };
+    }
+
+    canvas.addEventListener("pointerdown", (e) => {
+        const pos = getPosition(e);
+
+        drawing = true;
+        canvas.setPointerCapture(e.pointerId);
+
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    });
+
+    canvas.addEventListener("pointermove", (e) => {
+        if (!drawing) return;
+
+        const pos = getPosition(e);
+
+        ctx.lineTo(pos.x, pos.y);
+        ctx.strokeStyle = "#111";
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.stroke();
+    });
+
+    canvas.addEventListener("pointerup", () => {
+        drawing = false;
+    });
+
+    canvas.addEventListener("pointercancel", () => {
+        drawing = false;
+    });
+
+    function clearCanvas() {
+        drawAxes();
+        status.textContent = "";
+    }
+
+    async function saveCanvas() {
+        status.textContent = "Сохраняем...";
+
+        canvas.toBlob(async (blob) => {
+            if (!blob) {
+                status.textContent = "Не удалось подготовить изображение.";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", blob, "drawing.png");
+
+            try {
+                const response = await fetch(
+                    "https://intensity-profiles.onrender.com/save",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok || !result.id) {
+                    throw new Error("Ошибка сохранения");
                 }
-            }, "image/png");
-        }
-    </script>
+
+                status.textContent = "Сохранено. ID: " + result.id;
+
+            } catch (error) {
+                status.textContent = "Ошибка при сохранении. Попробуйте ещё раз.";
+                console.error(error);
+            }
+        }, "image/png");
+    }
+
+    // При открытии страницы сразу показываем оси
+    drawAxes();
+</script>
 
 </body>
 </html>

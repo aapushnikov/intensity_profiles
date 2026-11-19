@@ -5,7 +5,6 @@ import uuid
 import os
 import base64
 import requests
-import json
 import re
 from urllib.parse import quote
 
@@ -21,24 +20,30 @@ app.add_middleware(
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 GITHUB_REPO = "aapushnikov/intensity_profiles"
 
+GITHUB_HEADERS = {
+    "Authorization": f"Bearer {GITHUB_TOKEN}",
+    "Accept": "application/vnd.github+json",
+}
+
+PARTICIPANTS_FILE = "dataset/participants.txt"
+
 
 @app.get("/")
 def home():
     return {"status": "ok"}
 
 
-def upload_to_github(filename, content, message):
-    url = (
+def github_url(filename):
+    return (
         f"https://api.github.com/repos/{GITHUB_REPO}"
         f"/contents/{quote(filename, safe='/')}"
     )
 
+
+def upload_image(filename, content, message):
     response = requests.put(
-        url,
-        headers={
-            "Authorization": f"Bearer {GITHUB_TOKEN}",
-            "Accept": "application/vnd.github+json",
-        },
+        github_url(filename),
+        headers=GITHUB_HEADERS,
         json={
             "message": message,
             "content": base64.b64encode(content).decode("utf-8"),
@@ -48,8 +53,75 @@ def upload_to_github(filename, content, message):
 
     if response.status_code not in [200, 201]:
         raise HTTPException(
-            status_code=500,
-            detail="GitHub upload failed"
+            status_code=502,
+            detail="Не удалось сохранить рисунок в GitHub"
+        )
+
+
+def save_participant(participant_id, age, gender):
+    response = requests.get(
+        github_url(PARTICIPANTS_FILE),
+        headers=GITHUB_HEADERS,
+        timeout=30
+    )
+
+    sha = None
+    lines = ["participant_id\tage\tgender"]
+
+    if response.status_code == 200:
+        file_data = response.json()
+        sha = file_data["sha"]
+
+        old_content = base64.b64decode(
+            file_data["content"]
+        ).decode("utf-8")
+
+        lines = old_content.splitlines()
+
+        if not lines:
+            lines = ["participant_id\tage\tgender"]
+
+    elif response.status_code != 404:
+        raise HTTPException(
+            status_code=502,
+            detail="Не удалось прочитать файл участников в GitHub"
+        )
+
+    # Убираем старую строку этого участника, если она уже есть.
+    updated_lines = [lines[0]]
+
+    for line in lines[1:]:
+        fields = line.split("\t", 2)
+
+        if fields and fields[0] != participant_id:
+            updated_lines.append(line)
+
+    # Добавляем актуальные данные участника.
+    updated_lines.append(
+        f"{participant_id}\t{age}\t{gender}"
+    )
+
+    content = ("\n".join(updated_lines) + "\n").encode("utf-8")
+
+    payload = {
+        "message": f"Update participant {participant_id}",
+        "content": base64.b64encode(content).decode("utf-8"),
+    }
+
+    if sha:
+        payload["sha"] = sha
+
+    save_response = requests.put(
+        github_url(PARTICIPANTS_FILE),
+        headers=GITHUB_HEADERS,
+        json=payload,
+        timeout=30
+    )
+
+    if save_response.status_code not in [200, 201]:
+        raise HTTPException(
+            status_code=502,
+            detail="Не удалось обновить файл участников в GitHub"
         )
 
 
@@ -76,7 +148,10 @@ async def save(
             detail="Invalid participant ID"
         )
 
-    if not age.strip() or not gender.strip():
+    age = " ".join(age.split())
+    gender = " ".join(gender.split())
+
+    if not age or not gender:
         raise HTTPException(
             status_code=400,
             detail="Age and gender are required"
@@ -88,41 +163,31 @@ async def save(
         f"dataset/{participant_id}_{emotion}_{image_id}.png"
     )
 
-    metadata_filename = (
-        f"dataset/{participant_id}_{emotion}_{image_id}.json"
-    )
-
     image_data = await file.read()
 
-    metadata = {
-        "participant_id": participant_id,
-        "age": age.strip(),
-        "gender": gender.strip(),
-        "emotion": emotion,
-        "drawing_id": image_id
-    }
+    if not image_data:
+        raise HTTPException(
+            status_code=400,
+            detail="Empty image"
+        )
 
     try:
-        upload_to_github(
+        upload_image(
             image_filename,
             image_data,
             f"Add {emotion} drawing for participant {participant_id}"
         )
 
-        upload_to_github(
-            metadata_filename,
-            json.dumps(
-                metadata,
-                ensure_ascii=False,
-                indent=4
-            ).encode("utf-8"),
-            f"Add metadata for drawing {image_id}"
+        save_participant(
+            participant_id,
+            age,
+            gender
         )
 
     except requests.RequestException:
         raise HTTPException(
             status_code=502,
-            detail="Could not connect to GitHub"
+            detail="Не удалось связаться с GitHub"
         )
 
     return {

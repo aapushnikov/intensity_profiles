@@ -29,6 +29,29 @@
             margin: 20px 0 30px;
         }
 
+        .participant-info {
+            margin: 25px 0 35px;
+            padding: 20px;
+            background: #f7f7f7;
+            border-radius: 8px;
+        }
+
+        .participant-info label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .participant-info input {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
         canvas {
             display: block;
             width: 100%;
@@ -61,6 +84,33 @@
 <body>
 
 <h1>Исследование эмоций</h1>
+
+<div class="participant-info">
+
+    <h2>Сначала укажите краткую информацию о себе</h2>
+
+    <label for="age">Укажите ваш возраст:</label>
+    <input type="text" id="age" placeholder="Ваш возраст">
+
+    <label for="gender">Укажите ваш пол:</label>
+    <input type="text" id="gender" placeholder="Ваш пол">
+
+    <p>Придумайте любое кодовое слово — это будет ваш анонимный ID</p>
+
+    <input
+        type="text"
+        id="participant-id"
+        placeholder="Ваше кодовое слово"
+        maxlength="40"
+    >
+
+    <p>
+        Используйте кодовое слово, которое не позволяет установить вашу личность.
+        Не указывайте настоящее имя, фамилию или другие личные данные.
+    </p>
+
+</div>
+
 
 <section class="emotion-section">
 
@@ -211,7 +261,6 @@
             ctx.fillText(levels[i], plot.left - 15, y);
         }
 
-        // Оси графика
         ctx.strokeStyle = "#222";
         ctx.lineWidth = 2;
 
@@ -221,7 +270,6 @@
         ctx.lineTo(plot.right, plot.bottom);
         ctx.stroke();
 
-        // Отметки времени
         ctx.font = "15px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
@@ -238,7 +286,6 @@
             ctx.fillText(minute, x, plot.bottom + 12);
         }
 
-        // Подпись горизонтальной оси
         ctx.font = "bold 20px Arial";
         ctx.textAlign = "center";
         ctx.fillText(
@@ -247,7 +294,6 @@
             565
         );
 
-        // Подпись вертикальной оси — значительно левее
         ctx.save();
         ctx.translate(-55, (plot.top + plot.bottom) / 2);
         ctx.rotate(-Math.PI / 2);
@@ -314,7 +360,31 @@
         document.getElementById(statusId).textContent = "";
     }
 
+    function getParticipantInfo() {
+        const age = document.getElementById("age").value.trim();
+        const gender = document.getElementById("gender").value.trim();
+        const participantId = document.getElementById("participant-id").value
+            .trim()
+            .replace(/\s+/g, "-");
+
+        if (!age || !gender || !participantId) {
+            alert("Пожалуйста, заполните возраст, пол и кодовое слово.");
+            return null;
+        }
+
+        if (!/^[\p{L}\p{N}_-]{2,40}$/u.test(participantId)) {
+            alert("Кодовое слово должно содержать от 2 до 40 символов: буквы, цифры, дефис или подчёркивание.");
+            return null;
+        }
+
+        return { age, gender, participantId };
+    }
+
     async function saveCanvas(canvasId, statusId, emotion) {
+        const participant = getParticipantInfo();
+
+        if (!participant) return;
+
         const canvas = document.getElementById(canvasId);
         const status = document.getElementById(statusId);
 
@@ -329,6 +399,9 @@
             const formData = new FormData();
             formData.append("file", blob, "drawing.png");
             formData.append("emotion", emotion);
+            formData.append("participant_id", participant.participantId);
+            formData.append("age", participant.age);
+            formData.append("gender", participant.gender);
 
             try {
                 const response = await fetch(
@@ -342,11 +415,12 @@
                 const result = await response.json();
 
                 if (!response.ok || !result.id) {
-                    throw new Error("Ошибка сохранения");
+                    throw new Error(result.detail || "Ошибка сохранения");
                 }
 
                 status.textContent =
-                    "Сохранено. ID: " + result.id + "_" + emotion;
+                    "Сохранено. ID: " + participant.participantId +
+                    "_" + emotion;
 
             } catch (error) {
                 status.textContent = "Ошибка при сохранении. Попробуйте ещё раз.";
@@ -355,7 +429,6 @@
         }, "image/png");
     }
 
-    // Настраиваем все три графика
     ["canvas-fear", "canvas-anger", "canvas-sadness"].forEach(id => {
         const canvas = document.getElementById(id);
         drawAxes(canvas);

@@ -1,178 +1,172 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Исследование эмоций</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Исследование эмоций</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 0 20px;
-            line-height: 1.5;
-            color: #222;
-        }
+<style>
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0 20px;
+    line-height: 1.5;
+    color: #222;
+}
 
-        h1, h2 {
-            line-height: 1.3;
-        }
+h1, h2 {
+    line-height: 1.3;
+}
 
-        .participant-info {
-            margin: 25px 0 35px;
-            padding: 20px;
-            background: #f7f7f7;
-            border-radius: 8px;
-        }
+.participant-info {
+    margin: 25px 0 35px;
+    padding: 20px;
+    background: #f7f7f7;
+    border-radius: 8px;
+}
 
-        .participant-info label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+.participant-info label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
 
-        .participant-info input {
-            display: block;
-            width: 100%;
-            max-width: 400px;
-            box-sizing: border-box;
-            padding: 10px;
-            margin-top: 5px;
-            font-size: 16px;
-        }
+.participant-info input {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 16px;
+}
 
-        .example-image {
-            display: block;
-            width: 100%;
-            height: auto;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            background: white;
-            margin-top: 15px;
-        }
+.example-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    background: white;
+    margin-top: 15px;
+}
 
-        /* Область графика */
+/* Область графика */
 
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            margin-top: 15px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            background: white;
-        }
+.canvas-container {
+    position: relative;
+    width: 100%;
+    margin-top: 15px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    background: white;
+}
 
-        canvas {
-            display: block;
-            width: 100%;
-            height: auto;
-            touch-action: none;
-            cursor: crosshair;
-        }
+canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    touch-action: none;
+    cursor: crosshair;
+}
 
-        /* Панель управления графиком */
+/* Панель управления графиком */
 
-        .graph-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 12px;
-        }
+.graph-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
 
-        .graph-controls button {
-            flex: 1 1 130px;
-            margin: 0;
-        }
+.graph-controls button {
+    flex: 1 1 130px;
+    margin: 0;
+}
 
-        button {
-            font-size: 16px;
-            padding: 11px 18px;
-            cursor: pointer;
-        }
+button {
+    font-size: 16px;
+    padding: 11px 18px;
+    cursor: pointer;
+}
 
-        button:disabled {
-            cursor: wait;
-            opacity: 0.6;
-        }
+button:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
 
-        .delete-button {
-            color: #a22;
-        }
+.delete-button {
+    color: #a22;
+}
 
-        .drawing-instruction {
-            margin-top: 12px;
-            padding: 14px;
-            background: #f5f7fa;
-            border-radius: 7px;
-            font-size: 15px;
-        }
+.drawing-instruction {
+    margin-top: 12px;
+    padding: 14px;
+    background: #f5f7fa;
+    border-radius: 7px;
+    font-size: 15px;
+}
 
-        .selected-point-info {
-            margin-top: 12px;
-            min-height: 24px;
-            font-size: 14px;
-            color: #444;
-        }
+.status {
+    margin-top: 15px;
+    font-weight: bold;
+}
 
-        .status {
-            margin-top: 15px;
-            font-weight: bold;
-        }
+.emotion-section {
+    margin-top: 45px;
+}
 
-        .emotion-section {
-            margin-top: 45px;
-        }
+.event-question {
+    margin: 25px 0;
+}
 
-        .event-question {
-            margin: 25px 0;
-        }
+.event-question textarea {
+    display: block;
+    width: 100%;
+    max-width: 700px;
+    min-height: 70px;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-top: 8px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+}
 
-        .event-question textarea {
-            display: block;
-            width: 100%;
-            max-width: 700px;
-            min-height: 70px;
-            box-sizing: border-box;
-            padding: 10px;
-            margin-top: 8px;
-            font-size: 16px;
-            font-family: Arial, sans-serif;
-        }
+.importance-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+}
 
-        .importance-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 12px;
-        }
+.importance-options label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
 
-        .importance-options label {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
+.importance-options input[type="radio"] {
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    flex-shrink: 0;
+}
 
-        .importance-options input[type="radio"] {
-            width: 22px;
-            height: 22px;
-            margin: 0;
-            flex-shrink: 0;
-        }
-
-        .final-message {
-            margin-top: 50px;
-            margin-bottom: 40px;
-            font-weight: bold;
-        }
-    </style>
+.final-message {
+    margin-top: 50px;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+</style>
 </head>
 
 <body>
 
 <h1>Исследование эмоций</h1>
+
+<!-- КРАТКАЯ ИНФОРМАЦИЯ ОБ УЧАСТНИКЕ -->
 
 <div class="participant-info">
 
@@ -187,333 +181,62 @@
 </div>
 
 
-<!-- СТРАХ -->
+<!-- ОБЩАЯ ИНСТРУКЦИЯ -->
 
-<section class="emotion-section">
+<h2>Графики эмоций</h2>
 
-    <h2>Вспомните, когда вы последний раз испытывали СТРАХ</h2>
+<p>
+    Далее вам будет необходимо изобразить, как менялись во времени ваши эмоции.
+    Мы попросим вас выбрать эмоциональную ситуацию из недавнего времени.
+    На графике по вертикали отмечена сила эмоций, а по горизонтали — время.
+    График начинается с точки 0 по обеим осям.
+    Чтобы нарисовать график, нажимайте на нужные места экрана.
+    Сайт автоматически соединит поставленные точки плавной линией.
+    Чем выше точка, тем сильнее была эмоция.
+    Чем правее точка, тем больше времени прошло.
+    Вы можете перемещать точки, если хотите изменить график,
+    а также добавлять и удалять их.
+</p>
 
-    <p>Для исследования НЕ подходят эмоции, которые:</p>
 
-    <ol>
-        <li>Длились больше 2 часов;</li>
-        <li>Были вызваны неизвестной причиной или возникли без неё (например, если вдруг стало тревожно без причины);</li>
-        <li>Продолжаются сейчас.</li>
-    </ol>
+<!-- ПРИМЕРЫ -->
 
-    <p>Постарайтесь снова вжиться в ту эмоцию — вспомните:</p>
+<h2>Первый пример</h2>
 
-    <ol>
-        <li>Что вызвало эмоцию и почему;</li>
-        <li>Что вы почувствовали в первые минуты;</li>
-        <li>Как менялись ваши переживания и когда закончились.</li>
-    </ol>
-
-    <p>
-        Далее вам необходимо изобразить, как менялась сила ваших переживаний
-        на графике, где по вертикали отмечена сила эмоций, а по горизонтали —
-        время. График начинается с точки 0 по обеим осям.
-
-        Чтобы построить график, нажимайте на нужные места рабочей области.
-        Сайт автоматически соединит поставленные точки плавной линией.
-
-        Чем выше точка, тем сильнее была эмоция.
-        Чем правее точка, тем больше времени прошло.
-
-        Вы можете перемещать точки, если хотите изменить график,
-        а также добавлять и удалять их.
-    </p>
-
-    <h2>Первый пример</h2>
-
-    <p>
-        Разберём на примере. Валентин встретил на улице бродячую собаку.
-        Он боится собак и сильно испугался. Собака вскоре убежала и страх
-        Валентина ослаб, хотя ещё 20 минут он был немного напряжён и чувствовал
-        учащённое сердцебиение. Он изобразил такой график:
-    </p>
-
-    <img src="example1.png"
-         alt="Первый пример графика"
-         class="example-image">
+<p>
+    Разберём на примере. Валентин встретил на улице бродячую собаку.
+    Он боится собак и сильно испугался. Собака вскоре убежала и страх
+    Валентина ослаб, хотя ещё 20 минут он был немного напряжён и чувствовал
+    учащённое сердцебиение. Он изобразил такой график:
+</p>
 
-    <h2>Второй пример</h2>
+<img src="example1.png"
+     alt="Первый пример графика"
+     class="example-image">
 
-    <p>
-        Другой пример. Валентин встревожился, когда, будучи на работе,
-        вспомнил, что по рассеянности мог не закрыть дверь домой.
-        В течение полутора часов его тревога нарастала, пока он прокручивал
-        в голове мысль о незапертой двери. Потом Валентин совершил душевное
-        усилие и рационально убедил себя, что не мог не закрыть дверь,
-        ведь всегда закрывает её. Это успокоило его. Он изобразил такой график:
-    </p>
 
-    <img src="example2.png"
-         alt="Второй пример графика"
-         class="example-image">
+<h2>Второй пример</h2>
 
-    <h2>Теперь нарисуйте свой график</h2>
+<p>
+    Другой пример. Валентин встревожился, когда, будучи на работе,
+    вспомнил, что по рассеянности мог не закрыть дверь домой.
+    В течение полутора часов его тревога нарастала, пока он прокручивал
+    в голове мысль о незапертой двери. Потом Валентин совершил душевное
+    усилие и рационально убедил себя, что не мог не закрыть дверь,
+    ведь всегда закрывает её. Это успокоило его. Он изобразил такой график:
+</p>
 
-    <div class="event-question">
+<img src="example2.png"
+     alt="Второй пример графика"
+     class="example-image">
 
-        <label for="cause-fear">
-            Кратко, в 1 предложении, опишите, что вызвало эмоцию
-        </label>
 
-        <textarea id="cause-fear"
-                  maxlength="1000"
-                  placeholder="Что вызвало страх?"></textarea>
+<!-- БЛОКИ ЭМОЦИЙ -->
 
-        <p>Оцените значимость события, вызвавшего эмоцию</p>
+<div id="emotion-sections"></div>
 
-        <div class="importance-options">
-            <label>
-                <input type="radio" name="importance-fear" value="1">
-                1 — очень незначительное происшествие
-            </label>
 
-            <label>
-                <input type="radio" name="importance-fear" value="2">
-                2 — событие небольшой важности
-            </label>
-
-            <label>
-                <input type="radio" name="importance-fear" value="3">
-                3 — достаточно важное событие
-            </label>
-
-            <label>
-                <input type="radio" name="importance-fear" value="4">
-                4 — событие большой важности
-            </label>
-        </div>
-
-    </div>
-
-    <p>
-        Постройте график изменения силы переживаний
-        для ситуации, когда вы в последний раз испытывали СТРАХ.
-    </p>
-
-    <div class="canvas-container">
-        <canvas id="canvas-fear" width="1000" height="620"></canvas>
-    </div>
-
-    <div class="drawing-instruction">
-        <strong>Как пользоваться графиком:</strong>
-        <ul>
-            <li>Нажмите на свободное место, чтобы добавить точку.</li>
-            <li>Перетаскивайте точки, чтобы менять их положение.</li>
-            <li>Нажмите на точку, чтобы выбрать её для удаления.</li>
-            <li>Начальная точка (0, 0) не перемещается и не удаляется.</li>
-        </ul>
-    </div>
-
-    <div class="selected-point-info" id="info-fear">
-        Выберите точку или добавьте новую.
-    </div>
-
-    <div class="graph-controls">
-        <button onclick="deletePoint('canvas-fear')"
-                class="delete-button">
-            Удалить точку
-        </button>
-
-        <button onclick="clearCanvas('canvas-fear')">
-            Очистить график
-        </button>
-
-        <button onclick="saveCanvas('canvas-fear', 'status-fear', 'F')">
-            Сохранить график
-        </button>
-    </div>
-
-    <p class="status" id="status-fear"></p>
-
-</section>
-
-
-<!-- ГНЕВ -->
-
-<section class="emotion-section">
-
-    <h2>Вспомните, когда вы последний раз испытывали ГНЕВ</h2>
-
-    <p>
-        По той же инструкции, что и в предыдущем разделе, постройте график
-        изменения силы переживаний для ситуации, когда вы в последний раз
-        испытывали ГНЕВ.
-    </p>
-
-    <div class="event-question">
-
-        <label for="cause-anger">
-            Кратко, в 1 предложении, опишите, что вызвало эмоцию
-        </label>
-
-        <textarea id="cause-anger"
-                  maxlength="1000"
-                  placeholder="Что вызвало гнев?"></textarea>
-
-        <p>Оцените значимость события, вызвавшего эмоцию</p>
-
-        <div class="importance-options">
-            <label>
-                <input type="radio" name="importance-anger" value="1">
-                1 — очень незначительное происшествие
-            </label>
-
-            <label>
-                <input type="radio" name="importance-anger" value="2">
-                2 — событие небольшой важности
-            </label>
-
-            <label>
-                <input type="radio" name="importance-anger" value="3">
-                3 — достаточно важное событие
-            </label>
-
-            <label>
-                <input type="radio" name="importance-anger" value="4">
-                4 — событие большой важности
-            </label>
-        </div>
-
-    </div>
-
-    <p>
-        Постройте график изменения силы переживаний
-        для ситуации, когда вы в последний раз испытывали ГНЕВ.
-    </p>
-
-    <div class="canvas-container">
-        <canvas id="canvas-anger" width="1000" height="620"></canvas>
-    </div>
-
-    <div class="drawing-instruction">
-        <strong>Как пользоваться графиком:</strong>
-        <ul>
-            <li>Нажмите на свободное место, чтобы добавить точку.</li>
-            <li>Перетаскивайте точки, чтобы менять их положение.</li>
-            <li>Нажмите на точку, чтобы выбрать её для удаления.</li>
-            <li>Начальная точка (0, 0) не перемещается и не удаляется.</li>
-        </ul>
-    </div>
-
-    <div class="selected-point-info" id="info-anger">
-        Выберите точку или добавьте новую.
-    </div>
-
-    <div class="graph-controls">
-        <button onclick="deletePoint('canvas-anger')"
-                class="delete-button">
-            Удалить точку
-        </button>
-
-        <button onclick="clearCanvas('canvas-anger')">
-            Очистить график
-        </button>
-
-        <button onclick="saveCanvas('canvas-anger', 'status-anger', 'A')">
-            Сохранить график
-        </button>
-    </div>
-
-    <p class="status" id="status-anger"></p>
-
-</section>
-
-
-<!-- ГРУСТЬ -->
-
-<section class="emotion-section">
-
-    <h2>Вспомните, когда вы последний раз испытывали ГРУСТЬ</h2>
-
-    <p>
-        По той же инструкции, что и в предыдущем разделе, постройте график
-        изменения силы переживаний для ситуации, когда вы в последний раз
-        испытывали ГРУСТЬ.
-    </p>
-
-    <div class="event-question">
-
-        <label for="cause-sadness">
-            Кратко, в 1 предложении, опишите, что вызвало эмоцию
-        </label>
-
-        <textarea id="cause-sadness"
-                  maxlength="1000"
-                  placeholder="Что вызвало грусть?"></textarea>
-
-        <p>Оцените значимость события, вызвавшего эмоцию</p>
-
-        <div class="importance-options">
-            <label>
-                <input type="radio" name="importance-sadness" value="1">
-                1 — очень незначительное происшествие
-            </label>
-
-            <label>
-                <input type="radio" name="importance-sadness" value="2">
-                2 — событие небольшой важности
-            </label>
-
-            <label>
-                <input type="radio" name="importance-sadness" value="3">
-                3 — достаточно важное событие
-            </label>
-
-            <label>
-                <input type="radio" name="importance-sadness" value="4">
-                4 — событие большой важности
-            </label>
-        </div>
-
-    </div>
-
-    <p>
-        Постройте график изменения силы переживаний
-        для ситуации, когда вы в последний раз испытывали ГРУСТЬ.
-    </p>
-
-    <div class="canvas-container">
-        <canvas id="canvas-sadness" width="1000" height="620"></canvas>
-    </div>
-
-    <div class="drawing-instruction">
-        <strong>Как пользоваться графиком:</strong>
-        <ul>
-            <li>Нажмите на свободное место, чтобы добавить точку.</li>
-            <li>Перетаскивайте точки, чтобы менять их положение.</li>
-            <li>Нажмите на точку, чтобы выбрать её для удаления.</li>
-            <li>Начальная точка (0, 0) не перемещается и не удаляется.</li>
-        </ul>
-    </div>
-
-    <div class="selected-point-info" id="info-sadness">
-        Выберите точку или добавьте новую.
-    </div>
-
-    <div class="graph-controls">
-        <button onclick="deletePoint('canvas-sadness')"
-                class="delete-button">
-            Удалить точку
-        </button>
-
-        <button onclick="clearCanvas('canvas-sadness')">
-            Очистить график
-        </button>
-
-        <button onclick="saveCanvas('canvas-sadness', 'status-sadness', 'S')">
-            Сохранить график
-        </button>
-    </div>
-
-    <p class="status" id="status-sadness"></p>
-
-</section>
-
+<!-- ЗАВЕРШЕНИЕ -->
 
 <p class="final-message">
     На этом всё. Благодарим вас за участие в исследовании!
@@ -522,6 +245,208 @@
 
 
 <script>
+
+// ======================================================
+// НАСТРОЙКИ ЭМОЦИЙ
+// ======================================================
+
+const emotionConfig = [
+    {
+        key: "fear",
+        code: "F",
+        name: "СТРАХ",
+        prompt: "Что вызвало страх?"
+    },
+    {
+        key: "anger",
+        code: "A",
+        name: "ГНЕВ",
+        prompt: "Что вызвало гнев?"
+    },
+    {
+        key: "sadness",
+        code: "S",
+        name: "ГРУСТЬ",
+        prompt: "Что вызвало грусть?"
+    }
+];
+
+
+// ======================================================
+// ИНСТРУКЦИЯ ДЛЯ ЭМОЦИОНАЛЬНЫХ СИТУАЦИЙ
+// ======================================================
+
+const instructionsForEmotion = `
+<p>
+    Для исследования НЕ подходят эмоции, которые:
+</p>
+
+<ul>
+    <li>Длились больше 2 часов;</li>
+    <li>
+        Были вызваны неизвестной причиной или возникли без неё
+        (например, если вдруг стало тревожно без причины);
+    </li>
+    <li>Продолжаются сейчас.</li>
+</ul>
+
+<p>
+    Постарайтесь снова вжиться в ту эмоцию — вспомните:
+</p>
+
+<ul>
+    <li>Что вызвало эмоцию и почему;</li>
+    <li>Что вы почувствовали в первые минуты;</li>
+    <li>Как менялись ваши переживания и когда закончились.</li>
+</ul>
+
+<p>
+    По инструкции из предыдущего раздела и с опорой на примеры
+    постройте график изменения силы ваших эмоций в этой ситуации
+</p>
+`;
+
+
+// ======================================================
+// СОЗДАНИЕ БЛОКА ЭМОЦИИ
+// ======================================================
+
+function buildEmotionSection(item) {
+
+    return `
+<section class="emotion-section">
+
+    <h2>
+        Вспомните, когда вы последний раз испытывали ${item.name}
+    </h2>
+
+    ${instructionsForEmotion}
+
+    <div class="event-question">
+
+        <label for="cause-${item.key}">
+            Сначала кратко, в 1 предложении,
+            опишите, что вызвало эмоцию
+        </label>
+
+        <textarea
+            id="cause-${item.key}"
+            maxlength="1000"
+            placeholder="${item.prompt}"
+        ></textarea>
+
+        <p>
+            Оцените значимость события, вызвавшего эмоцию
+        </p>
+
+        <div class="importance-options">
+
+            <label>
+                <input
+                    type="radio"
+                    name="importance-${item.key}"
+                    value="1"
+                >
+                1 — очень незначительное происшествие
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="importance-${item.key}"
+                    value="2"
+                >
+                2 — событие небольшой важности
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="importance-${item.key}"
+                    value="3"
+                >
+                3 — достаточно важное событие
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="importance-${item.key}"
+                    value="4"
+                >
+                4 — событие большой важности
+            </label>
+
+        </div>
+
+    </div>
+
+    <div class="canvas-container">
+
+        <canvas
+            id="canvas-${item.key}"
+            width="1000"
+            height="620"
+        ></canvas>
+
+    </div>
+
+    <div class="drawing-instruction">
+
+        <strong>Как пользоваться графиком:</strong>
+
+        <ul>
+            <li>Нажмите на свободное место, чтобы добавить точку.</li>
+            <li>Перетаскивайте точки, чтобы менять их положение.</li>
+            <li>Нажмите на точку, чтобы выбрать её для удаления.</li>
+            <li>
+                Начальная точка (0, 0) не перемещается и не удаляется.
+            </li>
+        </ul>
+
+    </div>
+
+    <div class="graph-controls">
+
+        <button
+            onclick="deletePoint('canvas-${item.key}')"
+            class="delete-button"
+        >
+            Удалить точку
+        </button>
+
+        <button
+            onclick="clearCanvas('canvas-${item.key}')"
+        >
+            Очистить график
+        </button>
+
+        <button
+            onclick="saveCanvas(
+                'canvas-${item.key}',
+                'status-${item.key}',
+                '${item.code}'
+            )"
+        >
+            Сохранить график
+        </button>
+
+    </div>
+
+    <p class="status" id="status-${item.key}"></p>
+
+</section>
+`;
+}
+
+
+// ======================================================
+// ДОБАВЛЕНИЕ БЛОКОВ ЭМОЦИЙ НА СТРАНИЦУ
+// ======================================================
+
+document.getElementById("emotion-sections").innerHTML =
+    emotionConfig.map(buildEmotionSection).join("");
+
 
 // ======================================================
 // НАСТРОЙКИ ГРАФИКА
@@ -535,10 +460,13 @@ const plot = {
 };
 
 // Минимальное расстояние между точками по горизонтали
+
 const MIN_POINT_DISTANCE = 12;
 
-// Радиус обнаружения точки при касании (в координатах Canvas)
-const POINT_HIT_RADIUS = 22;
+// Увеличенная область попадания по точке.
+// Значение примерно в 2 раза больше прежнего.
+
+const POINT_HIT_RADIUS = 44;
 
 // Все графики хранят свои точки отдельно
 
@@ -560,10 +488,15 @@ function generateParticipantId() {
     let code = "";
 
     for (let i = 0; i < randomValues.length; i++) {
-        code += chars[randomValues[i] % chars.length];
+
+        code += chars[
+            randomValues[i] % chars.length
+        ];
+
     }
 
     return code;
+
 }
 
 
@@ -575,11 +508,15 @@ function getParticipantId() {
 
         participantId = generateParticipantId();
 
-        localStorage.setItem("participant_id", participantId);
+        localStorage.setItem(
+            "participant_id",
+            participantId
+        );
 
     }
 
     return participantId;
+
 }
 
 
@@ -594,11 +531,21 @@ function drawAxes(canvas) {
 
     const ctx = canvas.getContext("2d");
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
     ctx.fillStyle = "white";
 
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
     ctx.strokeStyle = "#cccccc";
 
@@ -669,7 +616,8 @@ function drawAxes(canvas) {
     for (let minute = 0; minute <= 120; minute += 10) {
 
         const x = plot.left +
-            (minute / 120) * (plot.right - plot.left);
+            (minute / 120) *
+            (plot.right - plot.left);
 
         ctx.beginPath();
 
@@ -718,9 +666,15 @@ function getPosition(canvas, e) {
     let y = (e.clientY - rect.top) *
         canvas.height / rect.height;
 
-    x = Math.max(plot.left, Math.min(plot.right, x));
+    x = Math.max(
+        plot.left,
+        Math.min(plot.right, x)
+    );
 
-    y = Math.max(plot.top, Math.min(plot.bottom, y));
+    y = Math.max(
+        plot.top,
+        Math.min(plot.bottom, y)
+    );
 
     return { x, y };
 
@@ -737,7 +691,10 @@ function drawSmoothCurve(ctx, points) {
 
     ctx.beginPath();
 
-    ctx.moveTo(points[0].x, points[0].y);
+    ctx.moveTo(
+        points[0].x,
+        points[0].y
+    );
 
     for (let i = 0; i < points.length - 1; i++) {
 
@@ -768,9 +725,15 @@ function drawSmoothCurve(ctx, points) {
 
         const maxY = Math.max(p1.y, p2.y);
 
-        cp1y = Math.max(minY, Math.min(maxY, cp1y));
+        cp1y = Math.max(
+            minY,
+            Math.min(maxY, cp1y)
+        );
 
-        cp2y = Math.max(minY, Math.min(maxY, cp2y));
+        cp2y = Math.max(
+            minY,
+            Math.min(maxY, cp2y)
+        );
 
         // Ограничиваем контрольные точки по времени
 
@@ -828,13 +791,17 @@ function renderGraph(canvasId) {
 
         ctx.lineJoin = "round";
 
-        drawSmoothCurve(ctx, graph.points);
+        drawSmoothCurve(
+            ctx,
+            graph.points
+        );
 
         ctx.restore();
 
     }
 
-    // Рисуем точки
+    // Рисуем точки только на странице.
+    // При сохранении они не попадут в PNG.
 
     graph.points.forEach((point, index) => {
 
@@ -850,15 +817,11 @@ function renderGraph(canvasId) {
 
         if (index === 0) {
 
-            // Начальная точка
-
             ctx.fillStyle = "#555";
 
             ctx.strokeStyle = "#222";
 
         } else if (index === graph.selected) {
-
-            // Выбранная точка
 
             ctx.fillStyle = "#ff9800";
 
@@ -880,59 +843,6 @@ function renderGraph(canvasId) {
 
     });
 
-    // Обновляем информацию о выбранной точке
-
-    updatePointInfo(canvasId);
-
-}
-
-
-// ======================================================
-// ИНФОРМАЦИЯ О ВЫБРАННОЙ ТОЧКЕ
-// ======================================================
-
-function updatePointInfo(canvasId) {
-
-    const graph = graphs[canvasId];
-
-    const infoId = canvasId.replace("canvas-", "info-");
-
-    const info = document.getElementById(infoId);
-
-    if (graph.selected === null) {
-
-        info.textContent = "Выберите точку или добавьте новую.";
-
-        return;
-
-    }
-
-    const point = graph.points[graph.selected];
-
-    const minute = Math.round(
-        (point.x - plot.left) /
-        (plot.right - plot.left) * 120
-    );
-
-    const intensity = Math.round(
-        (plot.bottom - point.y) /
-        (plot.bottom - plot.top) * 100
-    );
-
-    if (graph.selected === 0) {
-
-        info.textContent =
-            "Начальная точка: 0 минут, 0% интенсивности. Она закреплена.";
-
-    } else {
-
-        info.textContent =
-            "Выбрана точка: примерно " +
-            minute + " минут, интенсивность " +
-            intensity + "%.";
-
-    }
-
 }
 
 
@@ -952,7 +862,9 @@ function findPoint(graph, position) {
 
         const dy = point.y - position.y;
 
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        const distance = Math.sqrt(
+            dx * dx + dy * dy
+        );
 
         if (distance <= closestDistance) {
 
@@ -1037,7 +949,10 @@ function addPoint(canvasId, position) {
     // Проверяем, не находится ли место добавления
     // слишком близко к существующей точке
 
-    const nearby = findPoint(graph, position);
+    const nearby = findPoint(
+        graph,
+        position
+    );
 
     if (nearby !== null) {
 
@@ -1056,7 +971,9 @@ function addPoint(canvasId, position) {
 
     // Сортируем точки по времени
 
-    graph.points.sort((a, b) => a.x - b.x);
+    graph.points.sort(
+        (a, b) => a.x - b.x
+    );
 
     // Находим индекс новой точки
 
@@ -1103,9 +1020,15 @@ function setupCanvas(canvasId) {
 
         if (graph.dragging) return;
 
-        const position = getPosition(canvas, e);
+        const position = getPosition(
+            canvas,
+            e
+        );
 
-        const existingPoint = findPoint(graph, position);
+        const existingPoint = findPoint(
+            graph,
+            position
+        );
 
         if (existingPoint !== null) {
 
@@ -1119,7 +1042,10 @@ function setupCanvas(canvasId) {
             // Если нажали на свободное место,
             // создаём новую точку
 
-            const newIndex = addPoint(canvasId, position);
+            const newIndex = addPoint(
+                canvasId,
+                position
+            );
 
             if (newIndex === null) {
 
@@ -1154,7 +1080,10 @@ function setupCanvas(canvasId) {
 
         e.preventDefault();
 
-        const position = getPosition(canvas, e);
+        const position = getPosition(
+            canvas,
+            e
+        );
 
         const index = graph.selected;
 
@@ -1205,11 +1134,20 @@ function setupCanvas(canvasId) {
 
     }
 
-    canvas.addEventListener("pointerup", stopDragging);
+    canvas.addEventListener(
+        "pointerup",
+        stopDragging
+    );
 
-    canvas.addEventListener("pointercancel", stopDragging);
+    canvas.addEventListener(
+        "pointercancel",
+        stopDragging
+    );
 
-    canvas.addEventListener("lostpointercapture", stopDragging);
+    canvas.addEventListener(
+        "lostpointercapture",
+        stopDragging
+    );
 
 }
 
@@ -1272,7 +1210,10 @@ function clearCanvas(canvasId) {
 
     renderGraph(canvasId);
 
-    const statusId = canvasId.replace("canvas-", "status-");
+    const statusId = canvasId.replace(
+        "canvas-",
+        "status-"
+    );
 
     document.getElementById(statusId).textContent = "";
 
@@ -1285,9 +1226,15 @@ function clearCanvas(canvasId) {
 
 function getParticipantInfo() {
 
-    const age = document.getElementById("age").value.trim();
+    const age = document
+        .getElementById("age")
+        .value
+        .trim();
 
-    const gender = document.getElementById("gender").value.trim();
+    const gender = document
+        .getElementById("gender")
+        .value
+        .trim();
 
     if (!age || !gender) {
 
@@ -1369,7 +1316,8 @@ function createGraphImage(canvasId) {
 
     drawAxes(exportCanvas);
 
-    // Рисуем кривую
+    // Рисуем только плавную линию.
+    // Маркеры точек в сохраняемый PNG не добавляем.
 
     if (graph.points.length >= 2) {
 
@@ -1381,35 +1329,12 @@ function createGraphImage(canvasId) {
 
         ctx.lineJoin = "round";
 
-        drawSmoothCurve(ctx, graph.points);
-
-    }
-
-    // Рисуем все точки
-
-    graph.points.forEach((point, index) => {
-
-        ctx.beginPath();
-
-        ctx.arc(
-            point.x,
-            point.y,
-            7,
-            0,
-            Math.PI * 2
+        drawSmoothCurve(
+            ctx,
+            graph.points
         );
 
-        ctx.fillStyle = index === 0 ? "#555" : "#1769aa";
-
-        ctx.strokeStyle = index === 0 ? "#222" : "#104d80";
-
-        ctx.lineWidth = 2;
-
-        ctx.fill();
-
-        ctx.stroke();
-
-    });
+    }
 
     return new Promise((resolve, reject) => {
 
@@ -1422,7 +1347,9 @@ function createGraphImage(canvasId) {
             } else {
 
                 reject(
-                    new Error("Не удалось подготовить изображение.")
+                    new Error(
+                        "Не удалось подготовить изображение."
+                    )
                 );
 
             }
@@ -1438,7 +1365,11 @@ function createGraphImage(canvasId) {
 // СОХРАНЕНИЕ РИСУНКА И ОТВЕТОВ
 // ======================================================
 
-async function saveCanvas(canvasId, statusId, emotion) {
+async function saveCanvas(
+    canvasId,
+    statusId,
+    emotion
+) {
 
     const participant = getParticipantInfo();
 
@@ -1452,7 +1383,9 @@ async function saveCanvas(canvasId, statusId, emotion) {
 
     const emotionName = emotionNames[emotion];
 
-    const answers = getEmotionAnswers(emotionName);
+    const answers = getEmotionAnswers(
+        emotionName
+    );
 
     if (!answers) return;
 
@@ -1478,9 +1411,12 @@ async function saveCanvas(canvasId, statusId, emotion) {
 
     const buttons = section.querySelectorAll("button");
 
-    buttons.forEach(button => button.disabled = true);
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
 
-    status.textContent = "Сохраняем...";
+    status.textContent =
+        "Сохраняем, это может занять до 30 секунд";
 
     try {
 
@@ -1488,20 +1424,36 @@ async function saveCanvas(canvasId, statusId, emotion) {
 
         const formData = new FormData();
 
-        formData.append("file", blob, "drawing.png");
+        formData.append(
+            "file",
+            blob,
+            "drawing.png"
+        );
 
-        formData.append("emotion", emotion);
+        formData.append(
+            "emotion",
+            emotion
+        );
 
         formData.append(
             "participant_id",
             participant.participantId
         );
 
-        formData.append("age", participant.age);
+        formData.append(
+            "age",
+            participant.age
+        );
 
-        formData.append("gender", participant.gender);
+        formData.append(
+            "gender",
+            participant.gender
+        );
 
-        formData.append("cause", answers.cause);
+        formData.append(
+            "cause",
+            answers.cause
+        );
 
         formData.append(
             "importance",
@@ -1537,7 +1489,9 @@ async function saveCanvas(canvasId, statusId, emotion) {
 
     } finally {
 
-        buttons.forEach(button => button.disabled = false);
+        buttons.forEach(button => {
+            button.disabled = false;
+        }
 
     }
 
@@ -1548,11 +1502,9 @@ async function saveCanvas(canvasId, statusId, emotion) {
 // ИНИЦИАЛИЗАЦИЯ ТРЁХ ГРАФИКОВ
 // ======================================================
 
-[
-    "canvas-fear",
-    "canvas-anger",
-    "canvas-sadness"
-].forEach(canvasId => {
+emotionConfig.forEach(item => {
+
+    const canvasId = "canvas-" + item.key;
 
     setupCanvas(canvasId);
 

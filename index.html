@@ -66,6 +66,11 @@
             cursor: pointer;
         }
 
+        button:disabled {
+            cursor: wait;
+            opacity: 0.6;
+        }
+
         .status {
             margin-top: 15px;
             font-weight: bold;
@@ -79,6 +84,43 @@
             margin-top: 50px;
             margin-bottom: 40px;
             font-weight: bold;
+        }
+
+        .event-question {
+            margin: 25px 0;
+        }
+
+        .event-question textarea {
+            display: block;
+            width: 100%;
+            max-width: 700px;
+            min-height: 70px;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        .importance-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .importance-options label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .importance-options input[type="radio"] {
+            width: 22px;
+            height: 22px;
+            margin: 0;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -97,18 +139,14 @@
     <label for="gender">Укажите ваш пол:</label>
     <input type="text" id="gender" placeholder="Ваш пол">
 
-    <p>Придумайте любое кодовое слово — это будет ваш анонимный ID</p>
-
-    <input
-        type="text"
-        id="participant-id"
-        placeholder="Ваше кодовое слово"
-        maxlength="40"
-    >
+    <p>
+        Ваш анонимный код участника:
+        <strong id="participant-code">Генерируется...</strong>
+    </p>
 
     <p>
-        Используйте кодовое слово, которое не позволяет установить вашу личность.
-        Не указывайте настоящее имя, фамилию или другие личные данные.
+        Код создаётся автоматически и используется для связывания
+        ваших ответов и рисунков.
     </p>
 
 </div>
@@ -116,121 +154,235 @@
 
 <section class="emotion-section">
 
-<h2>Вспомните, когда вы последний раз испытывали СТРАХ</h2>
+    <h2>Вспомните, когда вы последний раз испытывали СТРАХ</h2>
 
-<p>Для исследования НЕ подходят эмоции, которые:</p>
+    <p>Для исследования НЕ подходят эмоции, которые:</p>
 
-<ol>
-    <li>Длились больше 2 часов;</li>
-    <li>Были вызваны неизвестной причиной или возникли без неё (например, если вдруг стало тревожно без причины);</li>
-    <li>Продолжаются сейчас.</li>
-</ol>
+    <ol>
+        <li>Длились больше 2 часов;</li>
+        <li>Были вызваны неизвестной причиной или возникли без неё (например, если вдруг стало тревожно без причины);</li>
+        <li>Продолжаются сейчас.</li>
+    </ol>
 
-<p>Постарайтесь снова вжиться в ту эмоцию — вспомните:</p>
+    <p>Постарайтесь снова вжиться в ту эмоцию — вспомните:</p>
 
-<ol>
-    <li>Что вызвало эмоцию и почему;</li>
-    <li>Что вы почувствовали в первые минуты;</li>
-    <li>Как менялись ваши переживания и когда закончились.</li>
-</ol>
+    <ol>
+        <li>Что вызвало эмоцию и почему;</li>
+        <li>Что вы почувствовали в первые минуты;</li>
+        <li>Как менялись ваши переживания и когда закончились.</li>
+    </ol>
 
-<p>
-    Далее вам необходимо нарисовать, как менялась сила ваших переживаний
-    на графике, где по вертикали отмечена сила эмоций, а по горизонтали —
-    время. Нарисуйте линию, которая показывает, насколько сильной была 
-    эмоция в разные моменты времени. Начинайте линию с точки 0 как по оси 
-    времени, так и по оси силы эмоций. Если эмоция усиливалась, линия 
-    должна подниматься; если ослабевала — опускаться. Если сила эмоции не 
-    менялась, линия должна оставаться на одном уровне.
-</p>
+    <p>
+        Далее вам необходимо нарисовать, как менялась сила ваших переживаний
+        на графике, где по вертикали отмечена сила эмоций, а по горизонтали —
+        время. Нарисуйте линию, которая показывает, насколько сильной была
+        эмоция в разные моменты времени. Начинайте линию с точки 0 как по оси
+        времени, так и по оси силы эмоций. Если эмоция усиливалась, линия
+        должна подниматься; если ослабевала — опускаться. Если сила эмоции не
+        менялась, линия должна оставаться на одном уровне.
+    </p>
 
-<h2>Первый пример</h2>
+    <h2>Первый пример</h2>
 
-<p>
-    Разберём на примере. Валентин встретил на улице бродячую собаку.
-    Он боится собак и сильно испугался. Собака вскоре убежала и страх
-    Валентина ослаб, хотя ещё 20 минут он был немного напряжён и чувствовал
-    учащённое сердцебиение. Он изобразил такой график:
-</p>
+    <p>
+        Разберём на примере. Валентин встретил на улице бродячую собаку.
+        Он боится собак и сильно испугался. Собака вскоре убежала и страх
+        Валентина ослаб, хотя ещё 20 минут он был немного напряжён и чувствовал
+        учащённое сердцебиение. Он изобразил такой график:
+    </p>
 
-<img
-    src="example1.png"
-    alt="Первый пример графика"
-    class="example-image"
->
+    <img
+        src="example1.png"
+        alt="Первый пример графика"
+        class="example-image"
+    >
 
-<h2>Второй пример</h2>
+    <h2>Второй пример</h2>
 
-<p>
-    Другой пример. Валентин встревожился, когда, будучи на работе,
-    вспомнил, что по рассеянности мог не закрыть дверь домой.
-    В течение полутора часов его тревога нарастала, пока он прокручивал
-    в голове мысль о незапертой двери. Потом Валентин совершил душевное
-    усилие и рационально убедил себя, что не мог не закрыть дверь,
-    ведь всегда закрывает её. Это успокоило его. Он изобразил такой график:
-</p>
+    <p>
+        Другой пример. Валентин встревожился, когда, будучи на работе,
+        вспомнил, что по рассеянности мог не закрыть дверь домой.
+        В течение полутора часов его тревога нарастала, пока он прокручивал
+        в голове мысль о незапертой двери. Потом Валентин совершил душевное
+        усилие и рационально убедил себя, что не мог не закрыть дверь,
+        ведь всегда закрывает её. Это успокоило его. Он изобразил такой график:
+    </p>
 
-<img
-    src="example2.png"
-    alt="Второй пример графика"
-    class="example-image"
->
+    <img
+        src="example2.png"
+        alt="Второй пример графика"
+        class="example-image"
+    >
 
-<h2>Теперь нарисуйте свой график</h2>
+    <h2>Теперь нарисуйте свой график</h2>
 
-<p>
-    Тут вы можете нарисовать свой график для ситуации,
-    когда вы в последний раз испытывали СТРАХ.
-</p>
+    <p>
+        Тут вы можете нарисовать свой график для ситуации,
+        когда вы в последний раз испытывали СТРАХ.
+    </p>
 
-<canvas id="canvas-fear" width="1000" height="620"></canvas>
+    <div class="event-question">
 
-<button onclick="clearCanvas('canvas-fear')">Очистить</button>
-<button onclick="saveCanvas('canvas-fear', 'status-fear', 'F')">Сохранить</button>
+        <label for="cause-fear">
+            Кратко, в 1 предложении, опишите, что вызвало эмоцию
+        </label>
 
-<p class="status" id="status-fear"></p>
+        <textarea
+            id="cause-fear"
+            maxlength="1000"
+            placeholder="Что вызвало страх?"
+        ></textarea>
 
-<p>
-    Если рисунок получился неудачным, вы можете его «Очистить».
-    Не забудьте нажать «Сохранить», когда нарисуете финальный вариант
-    и дождаться сохранения.
-</p>
+        <p>Оцените значимость события, вызвавшего эмоцию</p>
+
+        <div class="importance-options">
+            <label>
+                <input type="radio" name="importance-fear" value="1">
+                1 — очень незначительное происшествие
+            </label>
+
+            <label>
+                <input type="radio" name="importance-fear" value="2">
+                2 — событие небольшой важности
+            </label>
+
+            <label>
+                <input type="radio" name="importance-fear" value="3">
+                3 — достаточно важное событие
+            </label>
+
+            <label>
+                <input type="radio" name="importance-fear" value="4">
+                4 — событие большой важности
+            </label>
+        </div>
+
+    </div>
+
+    <canvas id="canvas-fear" width="1000" height="620"></canvas>
+
+    <button onclick="clearCanvas('canvas-fear')">Очистить</button>
+    <button onclick="saveCanvas('canvas-fear', 'status-fear', 'F')">Сохранить</button>
+
+    <p class="status" id="status-fear"></p>
+
+    <p>
+        Если рисунок получился неудачным, вы можете его «Очистить».
+        Не забудьте нажать «Сохранить», когда нарисуете финальный вариант
+        и дождаться сохранения.
+    </p>
 
 </section>
 
 
 <section class="emotion-section">
 
-<h2>Вспомните, когда вы последний раз испытывали ГНЕВ</h2>
+    <h2>Вспомните, когда вы последний раз испытывали ГНЕВ</h2>
 
-<p>
-    По той же инструкции изобразите, как менялись ваши эмоции в той ситуации.
-</p>
+    <p>
+        По той же инструкции изобразите, как менялись ваши эмоции в той ситуации.
+    </p>
 
-<canvas id="canvas-anger" width="1000" height="620"></canvas>
+    <div class="event-question">
 
-<button onclick="clearCanvas('canvas-anger')">Очистить</button>
-<button onclick="saveCanvas('canvas-anger', 'status-anger', 'A')">Сохранить</button>
+        <label for="cause-anger">
+            Кратко, в 1 предложении, опишите, что вызвало эмоцию
+        </label>
 
-<p class="status" id="status-anger"></p>
+        <textarea
+            id="cause-anger"
+            maxlength="1000"
+            placeholder="Что вызвало гнев?"
+        ></textarea>
+
+        <p>Оцените значимость события, вызвавшего эмоцию</p>
+
+        <div class="importance-options">
+            <label>
+                <input type="radio" name="importance-anger" value="1">
+                1 — очень незначительное происшествие
+            </label>
+
+            <label>
+                <input type="radio" name="importance-anger" value="2">
+                2 — событие небольшой важности
+            </label>
+
+            <label>
+                <input type="radio" name="importance-anger" value="3">
+                3 — достаточно важное событие
+            </label>
+
+            <label>
+                <input type="radio" name="importance-anger" value="4">
+                4 — событие большой важности
+            </label>
+        </div>
+
+    </div>
+
+    <canvas id="canvas-anger" width="1000" height="620"></canvas>
+
+    <button onclick="clearCanvas('canvas-anger')">Очистить</button>
+    <button onclick="saveCanvas('canvas-anger', 'status-anger', 'A')">Сохранить</button>
+
+    <p class="status" id="status-anger"></p>
 
 </section>
 
 
 <section class="emotion-section">
 
-<h2>Вспомните, когда вы последний раз испытывали ГРУСТЬ</h2>
+    <h2>Вспомните, когда вы последний раз испытывали ГРУСТЬ</h2>
 
-<p>
-    По той же инструкции изобразите, как менялись ваши эмоции в той ситуации.
-</p>
+    <p>
+        По той же инструкции изобразите, как менялись ваши эмоции в той ситуации.
+    </p>
 
-<canvas id="canvas-sadness" width="1000" height="620"></canvas>
+    <div class="event-question">
 
-<button onclick="clearCanvas('canvas-sadness')">Очистить</button>
-<button onclick="saveCanvas('canvas-sadness', 'status-sadness', 'S')">Сохранить</button>
+        <label for="cause-sadness">
+            Кратко, в 1 предложении, опишите, что вызвало эмоцию
+        </label>
 
-<p class="status" id="status-sadness"></p>
+        <textarea
+            id="cause-sadness"
+            maxlength="1000"
+            placeholder="Что вызвало грусть?"
+        ></textarea>
+
+        <p>Оцените значимость события, вызвавшего эмоцию</p>
+
+        <div class="importance-options">
+            <label>
+                <input type="radio" name="importance-sadness" value="1">
+                1 — очень незначительное происшествие
+            </label>
+
+            <label>
+                <input type="radio" name="importance-sadness" value="2">
+                2 — событие небольшой важности
+            </label>
+
+            <label>
+                <input type="radio" name="importance-sadness" value="3">
+                3 — достаточно важное событие
+            </label>
+
+            <label>
+                <input type="radio" name="importance-sadness" value="4">
+                4 — событие большой важности
+            </label>
+        </div>
+
+    </div>
+
+    <canvas id="canvas-sadness" width="1000" height="620"></canvas>
+
+    <button onclick="clearCanvas('canvas-sadness')">Очистить</button>
+    <button onclick="saveCanvas('canvas-sadness', 'status-sadness', 'S')">Сохранить</button>
+
+    <p class="status" id="status-sadness"></p>
 
 </section>
 
@@ -248,6 +400,39 @@
         top: 50,
         bottom: 500
     };
+
+
+    // Автоматический код участника
+
+    function generateParticipantId() {
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        const randomValues = crypto.getRandomValues(new Uint8Array(8));
+
+        let code = "";
+
+        for (let i = 0; i < randomValues.length; i++) {
+            code += chars[randomValues[i] % chars.length];
+        }
+
+        return code;
+    }
+
+
+    function getParticipantId() {
+        let participantId = localStorage.getItem("participant_id");
+
+        if (!participantId) {
+            participantId = generateParticipantId();
+            localStorage.setItem("participant_id", participantId);
+        }
+
+        return participantId;
+    }
+
+
+    document.getElementById("participant-code").textContent =
+        getParticipantId();
+
 
     function drawAxes(canvas) {
         const ctx = canvas.getContext("2d");
@@ -283,7 +468,6 @@
             ctx.fillText(levels[i], plot.left - 15, y);
         }
 
-        // Оси графика
         ctx.strokeStyle = "#222";
         ctx.lineWidth = 2;
 
@@ -293,7 +477,6 @@
         ctx.lineTo(plot.right, plot.bottom);
         ctx.stroke();
 
-        // Отметки времени
         ctx.font = "15px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
@@ -310,15 +493,16 @@
             ctx.fillText(minute, x, plot.bottom + 12);
         }
 
-        // Подпись горизонтальной оси
         ctx.font = "bold 20px Arial";
         ctx.textAlign = "center";
+
         ctx.fillText(
             "Время (минуты)",
             (plot.left + plot.right) / 2,
             565
         );
     }
+
 
     function getPosition(canvas, e) {
         const rect = canvas.getBoundingClientRect();
@@ -331,6 +515,7 @@
 
         return { x, y };
     }
+
 
     function setupCanvas(canvas) {
         let drawing = false;
@@ -368,6 +553,7 @@
         });
     }
 
+
     function clearCanvas(canvasId) {
         const canvas = document.getElementById(canvasId);
         drawAxes(canvas);
@@ -376,82 +562,132 @@
         document.getElementById(statusId).textContent = "";
     }
 
+
     function getParticipantInfo() {
         const age = document.getElementById("age").value.trim();
         const gender = document.getElementById("gender").value.trim();
 
-        const participantId = document.getElementById("participant-id").value
-            .trim()
-            .replace(/\s+/g, "-");
-
-        if (!age || !gender || !participantId) {
-            alert("Пожалуйста, заполните возраст, пол и кодовое слово.");
+        if (!age || !gender) {
+            alert("Пожалуйста, заполните возраст и пол.");
             return null;
         }
 
-        if (!/^[\p{L}\p{N}_-]{2,40}$/u.test(participantId)) {
-            alert("Кодовое слово должно содержать от 2 до 40 символов: буквы, цифры, дефис или подчёркивание.");
-            return null;
-        }
-
-        return { age, gender, participantId };
+        return {
+            age,
+            gender,
+            participantId: getParticipantId()
+        };
     }
+
+
+    function getEmotionAnswers(emotionName) {
+        const cause = document
+            .getElementById("cause-" + emotionName)
+            .value
+            .trim();
+
+        const selected = document.querySelector(
+            'input[name="importance-' + emotionName + '"]:checked'
+        );
+
+        if (!cause) {
+            alert("Пожалуйста, опишите событие, вызвавшее эмоцию.");
+            return null;
+        }
+
+        if (!selected) {
+            alert("Пожалуйста, оцените значимость события.");
+            return null;
+        }
+
+        return {
+            cause: cause,
+            importance: Number(selected.value)
+        };
+    }
+
 
     async function saveCanvas(canvasId, statusId, emotion) {
         const participant = getParticipantInfo();
 
         if (!participant) return;
 
+        const emotionNames = {
+            F: "fear",
+            A: "anger",
+            S: "sadness"
+        };
+
+        const emotionName = emotionNames[emotion];
+
+        const answers = getEmotionAnswers(emotionName);
+
+        if (!answers) return;
+
         const canvas = document.getElementById(canvasId);
         const status = document.getElementById(statusId);
+        const buttons = canvas.parentElement.querySelectorAll("button");
 
+        buttons.forEach(button => button.disabled = true);
         status.textContent = "Сохраняем...";
 
-        canvas.toBlob(async (blob) => {
+        try {
+            const blob = await new Promise(resolve => {
+                canvas.toBlob(resolve, "image/png");
+            });
+
             if (!blob) {
-                status.textContent = "Не удалось подготовить изображение.";
-                return;
+                throw new Error("Не удалось подготовить изображение.");
             }
 
             const formData = new FormData();
+
             formData.append("file", blob, "drawing.png");
             formData.append("emotion", emotion);
             formData.append("participant_id", participant.participantId);
             formData.append("age", participant.age);
             formData.append("gender", participant.gender);
+            formData.append("cause", answers.cause);
+            formData.append("importance", String(answers.importance));
 
-            try {
-                const response = await fetch(
-                    "https://intensity-profiles.onrender.com/save",
-                    {
-                        method: "POST",
-                        body: formData
-                    }
-                );
-
-                const result = await response.json();
-
-                if (!response.ok || !result.drawing_id) {
-                    throw new Error(result.detail || "Ошибка сохранения");
+            const response = await fetch(
+                "https://intensity-profiles.onrender.com/save",
+                {
+                    method: "POST",
+                    body: formData
                 }
+            );
 
-                status.textContent =
-                    "Сохранено. ID: " + participant.participantId +
-                    "_" + emotion;
+            const result = await response.json();
 
-            } catch (error) {
-                status.textContent = "Ошибка при сохранении. Попробуйте ещё раз.";
-                console.error(error);
+            if (!response.ok || !result.drawing_id) {
+                throw new Error(result.detail || "Ошибка сохранения");
             }
-        }, "image/png");
+
+            status.textContent =
+                "Сохранено. ID: " +
+                participant.participantId + "_" + emotion;
+
+        } catch (error) {
+            status.textContent =
+                "Ошибка при сохранении. Попробуйте ещё раз.";
+
+            console.error(error);
+
+        } finally {
+            buttons.forEach(button => button.disabled = false);
+        }
     }
 
+
     // Настраиваем все три графика
+
     ["canvas-fear", "canvas-anger", "canvas-sadness"].forEach(id => {
         const canvas = document.getElementById(id);
         drawAxes(canvas);
         setupCanvas(canvas);
     });
+
 </script>
 
 </body>

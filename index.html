@@ -56,7 +56,41 @@
 
         canvas {
             touch-action: none;
-            cursor: crosshair;
+            cursor: none;
+        }
+
+        /* Контейнер графика и виртуального карандаша */
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .canvas-container canvas {
+            margin-top: 0;
+        }
+
+        /* Виртуальный карандаш */
+
+        .virtual-pencil {
+            position: absolute;
+            left: 27%;
+            top: 80.65%;
+            transform: translate(-25%, -85%);
+            font-size: 27px;
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+            z-index: 2;
+        }
+
+        .drawing-instruction {
+            margin-top: 12px;
+            padding: 12px 15px;
+            background: #f5f7fa;
+            border-radius: 6px;
+            font-size: 15px;
         }
 
         button {
@@ -183,11 +217,7 @@
         учащённое сердцебиение. Он изобразил такой график:
     </p>
 
-    <img
-        src="example1.png"
-        alt="Первый пример графика"
-        class="example-image"
-    >
+    <img src="example1.png" alt="Первый пример графика" class="example-image">
 
     <h2>Второй пример</h2>
 
@@ -200,11 +230,7 @@
         ведь всегда закрывает её. Это успокоило его. Он изобразил такой график:
     </p>
 
-    <img
-        src="example2.png"
-        alt="Второй пример графика"
-        class="example-image"
-    >
+    <img src="example2.png" alt="Второй пример графика" class="example-image">
 
     <h2>Теперь нарисуйте свой график</h2>
 
@@ -214,11 +240,8 @@
             Кратко, в 1 предложении, опишите, что вызвало эмоцию
         </label>
 
-        <textarea
-            id="cause-fear"
-            maxlength="1000"
-            placeholder="Что вызвало страх?"
-        ></textarea>
+        <textarea id="cause-fear" maxlength="1000"
+            placeholder="Что вызвало страх?"></textarea>
 
         <p>Оцените значимость события, вызвавшего эмоцию</p>
 
@@ -227,17 +250,14 @@
                 <input type="radio" name="importance-fear" value="1">
                 1 — очень незначительное происшествие
             </label>
-
             <label>
                 <input type="radio" name="importance-fear" value="2">
                 2 — событие небольшой важности
             </label>
-
             <label>
                 <input type="radio" name="importance-fear" value="3">
                 3 — достаточно важное событие
             </label>
-
             <label>
                 <input type="radio" name="importance-fear" value="4">
                 4 — событие большой важности
@@ -251,7 +271,16 @@
         когда вы в последний раз испытывали СТРАХ.
     </p>
 
-    <canvas id="canvas-fear" width="1000" height="620"></canvas>
+    <div class="canvas-container">
+        <canvas id="canvas-fear" width="1000" height="620"></canvas>
+        <div class="virtual-pencil" id="pencil-fear">✏️</div>
+    </div>
+
+    <div class="drawing-instruction">
+        Перемещайте палец по экрану, чтобы управлять карандашом.
+        Карандаш движется в 5 раз медленнее вашего пальца.
+        Отпустите палец, чтобы остановить рисование.
+    </div>
 
     <button onclick="clearCanvas('canvas-fear')">Очистить</button>
     <button onclick="saveCanvas('canvas-fear', 'status-fear', 'F')">Сохранить</button>
@@ -285,11 +314,8 @@
             Кратко, в 1 предложении, опишите, что вызвало эмоцию
         </label>
 
-        <textarea
-            id="cause-anger"
-            maxlength="1000"
-            placeholder="Что вызвало гнев?"
-        ></textarea>
+        <textarea id="cause-anger" maxlength="1000"
+            placeholder="Что вызвало гнев?"></textarea>
 
         <p>Оцените значимость события, вызвавшего эмоцию</p>
 
@@ -298,17 +324,14 @@
                 <input type="radio" name="importance-anger" value="1">
                 1 — очень незначительное происшествие
             </label>
-
             <label>
                 <input type="radio" name="importance-anger" value="2">
                 2 — событие небольшой важности
             </label>
-
             <label>
                 <input type="radio" name="importance-anger" value="3">
                 3 — достаточно важное событие
             </label>
-
             <label>
                 <input type="radio" name="importance-anger" value="4">
                 4 — событие большой важности
@@ -322,7 +345,16 @@
         когда вы в последний раз испытывали ГНЕВ.
     </p>
 
-    <canvas id="canvas-anger" width="1000" height="620"></canvas>
+    <div class="canvas-container">
+        <canvas id="canvas-anger" width="1000" height="620"></canvas>
+        <div class="virtual-pencil" id="pencil-anger">✏️</div>
+    </div>
+
+    <div class="drawing-instruction">
+        Перемещайте палец по экрану, чтобы управлять карандашом.
+        Карандаш движется в 5 раз медленнее вашего пальца.
+        Отпустите палец, чтобы остановить рисование.
+    </div>
 
     <button onclick="clearCanvas('canvas-anger')">Очистить</button>
     <button onclick="saveCanvas('canvas-anger', 'status-anger', 'A')">Сохранить</button>
@@ -356,11 +388,8 @@
             Кратко, в 1 предложении, опишите, что вызвало эмоцию
         </label>
 
-        <textarea
-            id="cause-sadness"
-            maxlength="1000"
-            placeholder="Что вызвало грусть?"
-        ></textarea>
+        <textarea id="cause-sadness" maxlength="1000"
+            placeholder="Что вызвало грусть?"></textarea>
 
         <p>Оцените значимость события, вызвавшего эмоцию</p>
 
@@ -369,17 +398,14 @@
                 <input type="radio" name="importance-sadness" value="1">
                 1 — очень незначительное происшествие
             </label>
-
             <label>
                 <input type="radio" name="importance-sadness" value="2">
                 2 — событие небольшой важности
             </label>
-
             <label>
                 <input type="radio" name="importance-sadness" value="3">
                 3 — достаточно важное событие
             </label>
-
             <label>
                 <input type="radio" name="importance-sadness" value="4">
                 4 — событие большой важности
@@ -393,7 +419,16 @@
         когда вы в последний раз испытывали ГРУСТЬ.
     </p>
 
-    <canvas id="canvas-sadness" width="1000" height="620"></canvas>
+    <div class="canvas-container">
+        <canvas id="canvas-sadness" width="1000" height="620"></canvas>
+        <div class="virtual-pencil" id="pencil-sadness">✏️</div>
+    </div>
+
+    <div class="drawing-instruction">
+        Перемещайте палец по экрану, чтобы управлять карандашом.
+        Карандаш движется в 5 раз медленнее вашего пальца.
+        Отпустите палец, чтобы остановить рисование.
+    </div>
 
     <button onclick="clearCanvas('canvas-sadness')">Очистить</button>
     <button onclick="saveCanvas('canvas-sadness', 'status-sadness', 'S')">Сохранить</button>
@@ -424,9 +459,13 @@
         bottom: 500
     };
 
+    // Коэффициент чувствительности виртуального карандаша.
+    // 5 означает, что карандаш движется в 5 раз медленнее пальца.
 
-    // Генерация анонимного кода участника.
-    // Код не показывается участнику.
+    const DRAWING_SENSITIVITY = 5;
+
+
+    // Генерация анонимного кода участника
 
     function generateParticipantId() {
         const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -453,8 +492,6 @@
         return participantId;
     }
 
-
-    // Создаём или получаем код при открытии страницы
 
     getParticipantId();
 
@@ -531,7 +568,7 @@
     }
 
 
-    // Перевод координат указателя в координаты canvas
+    // Перевод координат указателя в координаты Canvas
 
     function getPosition(canvas, e) {
         const rect = canvas.getBoundingClientRect();
@@ -546,67 +583,207 @@
     }
 
 
-    // Настройка рисования мышью и пальцем
+    // Перемещение виртуального карандаша на экране
 
-    function setupCanvas(canvas) {
-        let drawing = false;
-        const ctx = canvas.getContext("2d");
+    function updatePencil(canvas, pencil, position) {
 
-        canvas.addEventListener("pointerdown", (e) => {
-            const pos = getPosition(canvas, e);
+        const xPercent = position.x / canvas.width * 100;
+        const yPercent = position.y / canvas.height * 100;
 
-            drawing = true;
-            canvas.setPointerCapture(e.pointerId);
-
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        });
-
-        canvas.addEventListener("pointermove", (e) => {
-            if (!drawing) return;
-
-            const pos = getPosition(canvas, e);
-
-            ctx.lineTo(pos.x, pos.y);
-            ctx.strokeStyle = "#111";
-            ctx.lineWidth = 3;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            ctx.stroke();
-        });
-
-        canvas.addEventListener("pointerup", () => {
-            drawing = false;
-        });
-
-        canvas.addEventListener("pointercancel", () => {
-            drawing = false;
-        });
+        pencil.style.left = xPercent + "%";
+        pencil.style.top = yPercent + "%";
     }
 
 
-    // Очистка графика
+    // Настройка рисования виртуальным карандашом
+
+    function setupCanvas(canvas) {
+
+        const ctx = canvas.getContext("2d");
+
+        const emotionName = canvas.id.replace("canvas-", "");
+
+        const pencil = document.getElementById(
+            "pencil-" + emotionName
+        );
+
+        // Начальное положение карандаша:
+        // точка 0 по времени и 0 по силе эмоции.
+
+        let pencilPosition = {
+            x: plot.left,
+            y: plot.bottom
+        };
+
+        // Последнее положение пальца
+
+        let lastPointerPosition = null;
+
+        let drawing = false;
+
+        // Показываем карандаш в начальной точке
+
+        updatePencil(canvas, pencil, pencilPosition);
+
+
+        canvas.addEventListener("pointerdown", (e) => {
+
+            e.preventDefault();
+
+            drawing = true;
+
+            // Запоминаем положение пальца.
+            // Сам карандаш при первом касании не перемещается.
+
+            lastPointerPosition = getPosition(canvas, e);
+
+            canvas.setPointerCapture(e.pointerId);
+
+        });
+
+
+        canvas.addEventListener("pointermove", (e) => {
+
+            if (!drawing) return;
+
+            e.preventDefault();
+
+            const currentPointerPosition = getPosition(canvas, e);
+
+            // Рассчитываем перемещение пальца
+
+            const deltaX =
+                currentPointerPosition.x - lastPointerPosition.x;
+
+            const deltaY =
+                currentPointerPosition.y - lastPointerPosition.y;
+
+            // Уменьшаем перемещение в DRAWING_SENSITIVITY раз
+
+            const movementX = deltaX / DRAWING_SENSITIVITY;
+            const movementY = deltaY / DRAWING_SENSITIVITY;
+
+            // Запоминаем предыдущее положение карандаша
+
+            const oldX = pencilPosition.x;
+            const oldY = pencilPosition.y;
+
+            // Перемещаем карандаш относительно его текущего положения
+
+            pencilPosition.x += movementX;
+            pencilPosition.y += movementY;
+
+            // Не позволяем выходить за пределы рабочей области графика
+
+            pencilPosition.x = Math.max(
+                plot.left,
+                Math.min(plot.right, pencilPosition.x)
+            );
+
+            pencilPosition.y = Math.max(
+                plot.top,
+                Math.min(plot.bottom, pencilPosition.y)
+            );
+
+            // Рисуем линию от предыдущего положения карандаша
+            // к новому положению
+
+            if (
+                oldX !== pencilPosition.x ||
+                oldY !== pencilPosition.y
+            ) {
+
+                ctx.beginPath();
+
+                ctx.moveTo(oldX, oldY);
+
+                ctx.lineTo(
+                    pencilPosition.x,
+                    pencilPosition.y
+                );
+
+                ctx.strokeStyle = "#111";
+                ctx.lineWidth = 3;
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+
+                ctx.stroke();
+
+            }
+
+            // Обновляем положение виртуального карандаша
+
+            updatePencil(canvas, pencil, pencilPosition);
+
+            // Запоминаем новое положение пальца
+
+            lastPointerPosition = currentPointerPosition;
+
+        });
+
+
+        // При отпускании пальца прекращаем рисование
+
+        canvas.addEventListener("pointerup", () => {
+
+            drawing = false;
+            lastPointerPosition = null;
+
+        });
+
+
+        canvas.addEventListener("pointercancel", () => {
+
+            drawing = false;
+            lastPointerPosition = null;
+
+        });
+
+    }
+
+
+    // Очистка графика и возвращение карандаша в начало
 
     function clearCanvas(canvasId) {
+
         const canvas = document.getElementById(canvasId);
 
         drawAxes(canvas);
 
+        const emotionName = canvasId.replace("canvas-", "");
+
+        const pencil = document.getElementById(
+            "pencil-" + emotionName
+        );
+
+        // Возвращаем карандаш в начальную точку
+
+        updatePencil(canvas, pencil, {
+            x: plot.left,
+            y: plot.bottom
+        });
+
         const statusId = canvasId.replace("canvas-", "status-");
 
         document.getElementById(statusId).textContent = "";
+
     }
 
 
     // Получение информации об участнике
 
     function getParticipantInfo() {
+
         const age = document.getElementById("age").value.trim();
+
         const gender = document.getElementById("gender").value.trim();
 
         if (!age || !gender) {
+
             alert("Пожалуйста, заполните возраст и пол.");
+
             return null;
+
         }
 
         return {
@@ -614,12 +791,14 @@
             gender: gender,
             participantId: getParticipantId()
         };
+
     }
 
 
-    // Получение ответов на два вопроса
+    // Получение ответов на вопросы
 
     function getEmotionAnswers(emotionName) {
+
         const cause = document
             .getElementById("cause-" + emotionName)
             .value
@@ -630,25 +809,33 @@
         );
 
         if (!cause) {
+
             alert("Пожалуйста, сначала опишите событие.");
+
             return null;
+
         }
 
         if (!selected) {
+
             alert("Пожалуйста, сначала оцените значимость события.");
+
             return null;
+
         }
 
         return {
             cause: cause,
             importance: Number(selected.value)
         };
+
     }
 
 
     // Сохранение рисунка и ответов
 
     async function saveCanvas(canvasId, statusId, emotion) {
+
         const participant = getParticipantInfo();
 
         if (!participant) return;
@@ -666,15 +853,19 @@
         if (!answers) return;
 
         const canvas = document.getElementById(canvasId);
+
         const status = document.getElementById(statusId);
 
-        const buttons = canvas.parentElement.querySelectorAll("button");
+        const buttons = canvas
+            .closest(".emotion-section")
+            .querySelectorAll("button");
 
         buttons.forEach(button => button.disabled = true);
 
         status.textContent = "Сохраняем...";
 
         try {
+
             const blob = await new Promise(resolve => {
                 canvas.toBlob(resolve, "image/png");
             });
@@ -704,30 +895,41 @@
             const result = await response.json();
 
             if (!response.ok || !result.drawing_id) {
-                throw new Error(result.detail || "Ошибка сохранения");
+
+                throw new Error(
+                    result.detail || "Ошибка сохранения"
+                );
+
             }
 
             status.textContent = "Сохранено.";
 
         } catch (error) {
+
             status.textContent =
                 "Ошибка при сохранении. Попробуйте ещё раз.";
 
             console.error(error);
 
         } finally {
+
             buttons.forEach(button => button.disabled = false);
+
         }
+
     }
 
 
     // Инициализация всех трёх графиков
 
     ["canvas-fear", "canvas-anger", "canvas-sadness"].forEach(id => {
+
         const canvas = document.getElementById(id);
 
         drawAxes(canvas);
+
         setupCanvas(canvas);
+
     });
 
 </script>

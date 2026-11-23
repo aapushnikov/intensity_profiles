@@ -80,12 +80,6 @@
             margin-top: 45px;
         }
 
-        .final-message {
-            margin-top: 50px;
-            margin-bottom: 40px;
-            font-weight: bold;
-        }
-
         .event-question {
             margin: 25px 0;
         }
@@ -122,6 +116,12 @@
             margin: 0;
             flex-shrink: 0;
         }
+
+        .final-message {
+            margin-top: 50px;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -138,16 +138,6 @@
 
     <label for="gender">Укажите ваш пол:</label>
     <input type="text" id="gender" placeholder="Ваш пол">
-
-    <p>
-        Ваш анонимный код участника:
-        <strong id="participant-code">Генерируется...</strong>
-    </p>
-
-    <p>
-        Код создаётся автоматически и используется для связывания
-        ваших ответов и рисунков.
-    </p>
 
 </div>
 
@@ -221,6 +211,13 @@
         когда вы в последний раз испытывали СТРАХ.
     </p>
 
+    <canvas id="canvas-fear" width="1000" height="620"></canvas>
+
+    <button onclick="clearCanvas('canvas-fear')">Очистить</button>
+    <button onclick="saveCanvas('canvas-fear', 'status-fear', 'F')">Сохранить</button>
+
+    <p class="status" id="status-fear"></p>
+
     <div class="event-question">
 
         <label for="cause-fear">
@@ -259,19 +256,6 @@
 
     </div>
 
-    <canvas id="canvas-fear" width="1000" height="620"></canvas>
-
-    <button onclick="clearCanvas('canvas-fear')">Очистить</button>
-    <button onclick="saveCanvas('canvas-fear', 'status-fear', 'F')">Сохранить</button>
-
-    <p class="status" id="status-fear"></p>
-
-    <p>
-        Если рисунок получился неудачным, вы можете его «Очистить».
-        Не забудьте нажать «Сохранить», когда нарисуете финальный вариант
-        и дождаться сохранения.
-    </p>
-
 </section>
 
 
@@ -280,8 +264,22 @@
     <h2>Вспомните, когда вы последний раз испытывали ГНЕВ</h2>
 
     <p>
-        По той же инструкции изобразите, как менялись ваши эмоции в той ситуации.
+        Постарайтесь снова вжиться в ту эмоцию — вспомните, что вызвало её,
+        что вы почувствовали в первые минуты, как менялись ваши переживания
+        и когда они закончились.
     </p>
+
+    <p>
+        Тут вы можете нарисовать свой график для ситуации,
+        когда вы в последний раз испытывали ГНЕВ.
+    </p>
+
+    <canvas id="canvas-anger" width="1000" height="620"></canvas>
+
+    <button onclick="clearCanvas('canvas-anger')">Очистить</button>
+    <button onclick="saveCanvas('canvas-anger', 'status-anger', 'A')">Сохранить</button>
+
+    <p class="status" id="status-anger"></p>
 
     <div class="event-question">
 
@@ -321,13 +319,6 @@
 
     </div>
 
-    <canvas id="canvas-anger" width="1000" height="620"></canvas>
-
-    <button onclick="clearCanvas('canvas-anger')">Очистить</button>
-    <button onclick="saveCanvas('canvas-anger', 'status-anger', 'A')">Сохранить</button>
-
-    <p class="status" id="status-anger"></p>
-
 </section>
 
 
@@ -336,8 +327,22 @@
     <h2>Вспомните, когда вы последний раз испытывали ГРУСТЬ</h2>
 
     <p>
-        По той же инструкции изобразите, как менялись ваши эмоции в той ситуации.
+        Постарайтесь снова вжиться в ту эмоцию — вспомните, что вызвало её,
+        что вы почувствовали в первые минуты, как менялись ваши переживания
+        и когда они закончились.
     </p>
+
+    <p>
+        Тут вы можете нарисовать свой график для ситуации,
+        когда вы в последний раз испытывали ГРУСТЬ.
+    </p>
+
+    <canvas id="canvas-sadness" width="1000" height="620"></canvas>
+
+    <button onclick="clearCanvas('canvas-sadness')">Очистить</button>
+    <button onclick="saveCanvas('canvas-sadness', 'status-sadness', 'S')">Сохранить</button>
+
+    <p class="status" id="status-sadness"></p>
 
     <div class="event-question">
 
@@ -377,13 +382,6 @@
 
     </div>
 
-    <canvas id="canvas-sadness" width="1000" height="620"></canvas>
-
-    <button onclick="clearCanvas('canvas-sadness')">Очистить</button>
-    <button onclick="saveCanvas('canvas-sadness', 'status-sadness', 'S')">Сохранить</button>
-
-    <p class="status" id="status-sadness"></p>
-
 </section>
 
 
@@ -394,6 +392,7 @@
 
 
 <script>
+
     const plot = {
         left: 270,
         right: 960,
@@ -402,7 +401,8 @@
     };
 
 
-    // Автоматический код участника
+    // Автоматическая генерация анонимного кода участника.
+    // Код не показывается участнику.
 
     function generateParticipantId() {
         const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -430,9 +430,12 @@
     }
 
 
-    document.getElementById("participant-code").textContent =
-        getParticipantId();
+    // Инициализируем код при открытии страницы
 
+    getParticipantId();
+
+
+    // Рисуем оси и подписи
 
     function drawAxes(canvas) {
         const ctx = canvas.getContext("2d");
@@ -504,6 +507,8 @@
     }
 
 
+    // Перевод координат указателя в координаты canvas
+
     function getPosition(canvas, e) {
         const rect = canvas.getBoundingClientRect();
 
@@ -516,6 +521,8 @@
         return { x, y };
     }
 
+
+    // Настройка рисования мышью и пальцем
 
     function setupCanvas(canvas) {
         let drawing = false;
@@ -554,14 +561,20 @@
     }
 
 
+    // Очистка графика
+
     function clearCanvas(canvasId) {
         const canvas = document.getElementById(canvasId);
+
         drawAxes(canvas);
 
         const statusId = canvasId.replace("canvas-", "status-");
+
         document.getElementById(statusId).textContent = "";
     }
 
+
+    // Получение информации об участнике
 
     function getParticipantInfo() {
         const age = document.getElementById("age").value.trim();
@@ -573,12 +586,14 @@
         }
 
         return {
-            age,
-            gender,
+            age: age,
+            gender: gender,
             participantId: getParticipantId()
         };
     }
 
+
+    // Получение ответов на два вопроса
 
     function getEmotionAnswers(emotionName) {
         const cause = document
@@ -607,6 +622,8 @@
     }
 
 
+    // Сохранение рисунка и ответов
+
     async function saveCanvas(canvasId, statusId, emotion) {
         const participant = getParticipantInfo();
 
@@ -626,9 +643,11 @@
 
         const canvas = document.getElementById(canvasId);
         const status = document.getElementById(statusId);
+
         const buttons = canvas.parentElement.querySelectorAll("button");
 
         buttons.forEach(button => button.disabled = true);
+
         status.textContent = "Сохраняем...";
 
         try {
@@ -664,9 +683,7 @@
                 throw new Error(result.detail || "Ошибка сохранения");
             }
 
-            status.textContent =
-                "Сохранено. ID: " +
-                participant.participantId + "_" + emotion;
+            status.textContent = "Сохранено.";
 
         } catch (error) {
             status.textContent =
@@ -680,10 +697,11 @@
     }
 
 
-    // Настраиваем все три графика
+    // Инициализация всех трёх графиков
 
     ["canvas-fear", "canvas-anger", "canvas-sadness"].forEach(id => {
         const canvas = document.getElementById(id);
+
         drawAxes(canvas);
         setupCanvas(canvas);
     });
